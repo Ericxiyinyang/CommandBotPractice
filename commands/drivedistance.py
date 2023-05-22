@@ -9,7 +9,7 @@ from drivetrain import Drivetrain
 
 class DriveDistance(commands2.CommandBase):
     def __init__(self, speed: float, meters: float, drive: Drivetrain) -> None:
-        """Creates a new DriveDistance. This command will drive your your robot for a desired distance at
+        """Creates a new DriveDistance. This command will drive your robot for a desired distance at
         a desired speed.
 
         :param speed:  The speed at which the robot will drive
@@ -17,11 +17,11 @@ class DriveDistance(commands2.CommandBase):
         :param drive:  The drivetrain subsystem on which this command will run
         """
         super().__init__()
-
         self.distance = meters
+        self.fwd_pid
         self.speed = speed
         self.drive = drive
-        self.addRequirements(drive)
+        self.addRequirements([self.drive])
 
     def initialize(self) -> None:
         """Called when the command is initially scheduled."""
