@@ -4,10 +4,13 @@ from wpilib.drive import DifferentialDrive
 import math
 from wpilib import Spark, Encoder
 import romi
-class Drivetrain:
+import commands2
+
+class Drivetrain(commands2.SubsystemBase):
 
 
     def __init__(self):
+        super().__init__()
         self.kCountsPerRevolution = 1440.0
         self.kWheelDiameterMeter = 0.07
         self.left_motor=Spark(0)

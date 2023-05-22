@@ -15,25 +15,29 @@ class Robot(commands2.TimedCommandRobot):
 
 #DO NOT OVERRIDE TIMED COMMAND ROBOT PERIODIC
     #def robotPeriodic(self) -> None:
-        ...
+        pass
 
     def teleopInit(self) -> None:
-        ...
+        pass
 
     def teleopPeriodic(self) -> None:
-        forward = self.container.controller.getRawAxis(0)
-        rotate = self.container.controller.getRawAxis(1)
-        self.container.drivetrain.arcadeDrive(rotate, forward)
-        print(f"Forward: {forward}, Rotate: {rotate}")
+        #forward = self.container.controller.getRawAxis(0)
+        #rotate = self.container.controller.getRawAxis(1)
+        #self.container.drivetrain.arcadeDrive(rotate, forward)
+        #print(f"Forward: {forward}, Rotate: {rotate}")
+        pass
 
     def autonomousInit(self) -> None:
-        self.auto = self.container.get_autonomous()
+        # self.auto = self.container.get_autonomous()
+        pass
 
     def autonomousPeriodic(self) -> None:
-        self.auto.run()
+        #self.auto.run()
+        pass
 
     def autonomousExit(self) -> None:
-        self.container.drivetrain.resetGyro()
+        #self.container.drivetrain.resetGyro()
+        pass
 
     def disabledInit(self) -> None:
         pass

@@ -1,9 +1,10 @@
 import wpilib
 
-from autoroutine import AutoRoutine
-from drivestraight import DriveStraight
+#from autoroutine import AutoRoutine
+#from drivestraight import DriveStraight
 from drivetrain import Drivetrain
-from gyroturn import GyroTurn
+from commands.arcadedrive import ArcadeDrive
+#from gyroturn import GyroTurn
 
 
 class RobotContainer:
@@ -16,9 +17,14 @@ class RobotContainer:
         self._configure()
 
     def _configure(self):
-        self.chooser.setDefaultOption("Twist 90 degrees", GyroTurn(self.drivetrain, 90))
-        self.chooser.addOption("Go straight 2m", DriveStraight(self.drivetrain, 2))
-        wpilib.SmartDashboard.putData(self.chooser)
+        # self.chooser.setDefaultOption("Twist 90 degrees", GyroTurn(self.drivetrain, 90))
+        # self.chooser.addOption("Go straight 2m", DriveStraight(self.drivetrain, 2))
+        # wpilib.SmartDashboard.putData(self.chooser)
+        self.drivetrain.setDefaultCommand(self.getArcadeDriveCommand())
 
-    def get_autonomous(self) -> AutoRoutine:
-        return self.chooser.getSelected()
+
+    # def get_autonomous(self) -> AutoRoutine:
+    #     return self.chooser.getSelected()
+
+    def getArcadeDriveCommand(self):
+        return ArcadeDrive(self.drivetrain, lambda: self.controller.getRawAxis(0), lambda: self.controller.getRawAxis(1))
