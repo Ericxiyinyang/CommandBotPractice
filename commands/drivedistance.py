@@ -3,7 +3,7 @@
 # the WPILib BSD license file in the root directory of this project.
 
 import commands2
-
+from superpid import AIOPID
 from drivetrain import Drivetrain
 
 
@@ -18,8 +18,13 @@ class DriveDistance(commands2.CommandBase):
         """
         super().__init__()
         self.distance = meters
-        self.fwd_pid
-        self.speed = speed
+        self.fwd_pid = AIOPID(
+            prop=0.1,
+            integral=0.0,
+            derivative=0.0,
+            setPoint=self.distance,
+            tol=0.1
+        )
         self.drive = drive
         self.addRequirements([self.drive])
 
@@ -30,7 +35,8 @@ class DriveDistance(commands2.CommandBase):
 
     def execute(self) -> None:
         """Called every time the scheduler runs while the command is scheduled."""
-        self.drive.arcadeDrive(0, self.speed)
+        self.fwd = self.fwd_pid.calculate(self.drive.averageDistanceMeter())
+        self.drive.arcadeDrive(0, self.fwd)
 
     def end(self, interrupted: bool) -> None:
         """Called once the command ends or is interrupted."""
@@ -39,5 +45,5 @@ class DriveDistance(commands2.CommandBase):
     def isFinished(self) -> bool:
         """Returns true when the command should end."""
         # Compare distance travelled from start to desired distance
-        return abs(self.drive.averageDistanceMeter()) >= self.distance
+        return self.fwd_pid.atSetpoint()
 
