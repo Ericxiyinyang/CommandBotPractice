@@ -5,14 +5,16 @@ import wpilib
 from wpilib import TimedRobot
 
 from robotcontainer import RobotContainer
+import commands2
 
 
-class Robot(TimedRobot):
+class Robot(commands2.TimedCommandRobot):
 
     def robotInit(self) -> None:
         self.container = RobotContainer()
 
-    def robotPeriodic(self) -> None:
+#DO NOT OVERRIDE TIMED COMMAND ROBOT PERIODIC
+    #def robotPeriodic(self) -> None:
         ...
 
     def teleopInit(self) -> None:
