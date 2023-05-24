@@ -34,10 +34,10 @@ class DriveDistance(commands2.CommandBase):
         self.drive.resetEncoders()
 
     def execute(self) -> None:
-        self.fwd = self.fwd_pid.calculate(self.drive.averageDistanceMeter())
-        self.diff = self.drive.getLEncoderDistance() - self.drive.getREncoderDistance()
-        self.rot = self.rot_pid.calculate(self.diff)
-        self.drive.arcadeDrive(self.rot, self.fwd)
+        fwd = self.fwd_pid.calculate(self.drive.averageDistanceMeter())
+        diff = self.drive.getLEncoderDistance() - self.drive.getREncoderDistance()
+        rot = self.rot_pid.calculate(diff)
+        self.drive.arcadeDrive(rot, fwd)
 
     def isFinished(self) -> bool:
         return self.fwd_pid.atSetpoint()
