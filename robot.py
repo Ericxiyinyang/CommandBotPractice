@@ -29,7 +29,10 @@ class Robot(commands2.TimedCommandRobot):
 
     def autonomousInit(self) -> None:
         # self.auto = self.container.get_autonomous()
-        pass
+        self.auto = self.container.getAuto()
+
+        if self.auto:
+            self.auto.schedule()
 
     def autonomousPeriodic(self) -> None:
         #self.auto.run()

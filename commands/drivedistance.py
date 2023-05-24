@@ -5,45 +5,44 @@
 import commands2
 from superpid import AIOPID
 from drivetrain import Drivetrain
+from botconstants import RobotConstants as RC
 
 
 class DriveDistance(commands2.CommandBase):
-    def __init__(self, speed: float, meters: float, drive: Drivetrain) -> None:
-        """Creates a new DriveDistance. This command will drive your robot for a desired distance at
-        a desired speed.
-
-        :param speed:  The speed at which the robot will drive
-        :param meters: The number of inches the robot will drive
-        :param drive:  The drivetrain subsystem on which this command will run
-        """
+    def __init__(self, speed: float, dist: float, drive: Drivetrain) -> None:
         super().__init__()
-        self.distance = meters
+        self.distance = dist
         self.fwd_pid = AIOPID(
-            prop=0.1,
-            integral=0.0,
-            derivative=0.0,
+            prop=RC.kp,
+            integral=RC.ki,
+            derivative=RC.kd,
             setPoint=self.distance,
+            tol=0.1
+        )
+        self.rot_pid = AIOPID(
+            prop=RC.kpR,
+            integral=RC.kiR,
+            derivative=RC.kdR,
+            setPoint=0.0,
             tol=0.1
         )
         self.drive = drive
         self.addRequirements([self.drive])
 
     def initialize(self) -> None:
-        """Called when the command is initially scheduled."""
         self.drive.arcadeDrive(0, 0)
         self.drive.resetEncoders()
 
     def execute(self) -> None:
-        """Called every time the scheduler runs while the command is scheduled."""
         self.fwd = self.fwd_pid.calculate(self.drive.averageDistanceMeter())
-        self.drive.arcadeDrive(0, self.fwd)
-
-    def end(self, interrupted: bool) -> None:
-        """Called once the command ends or is interrupted."""
-        self.drive.arcadeDrive(0, 0)
+        self.diff = self.drive.getLEncoderDistance() - self.drive.getREncoderDistance()
+        self.rot = self.rot_pid.calculate(self.diff)
+        self.drive.arcadeDrive(self.rot, self.fwd)
 
     def isFinished(self) -> bool:
-        """Returns true when the command should end."""
-        # Compare distance travelled from start to desired distance
         return self.fwd_pid.atSetpoint()
+
+    def end(self, interrupted: bool) -> None:
+        self.drive.arcadeDrive(0, 0)
+
 
